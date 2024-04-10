@@ -13,6 +13,7 @@ router.get("/", (req, res, next) => {
     */
   Order.find()
     .select("product quantity _id")
+    .populate('product','name')
     .exec()
     .then((orders) => {
       if (orders) {
@@ -20,9 +21,10 @@ router.get("/", (req, res, next) => {
           count: orders.length,
           orderss: orders.map((order) => {
             return {
+                _id: order._id,
               product: order.product,
               quantity: order.quantity,
-              _id: order._id,
+             
               request: {
                 type: "GET",
                 url: "http://localhost:3000/api/orders/" + order._id,
@@ -104,6 +106,7 @@ router.get("/:orderId", (req, res, next) => {
     */
   const id = req.params.orderId;
   Order.findById({_id:id})
+  .populate('product','name')
     .exec()
     .then((order) => {
       res.status(200).json({
