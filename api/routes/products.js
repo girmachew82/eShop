@@ -10,23 +10,57 @@ router.get("/", (req, res, next) => {
     })
     */
   Product.find()
-    .select("name price")
+    .select("name price _id")
     .exec()
-    .then((products) => {
-      //console.log(products);
-      if (products.length >= 0) {
+    .then(docs => {
+      /*
+      const result = {
+        result:"reefeee"
+        //count: products.length,
+        
+        productss: products.map(product =>{
+          return{
+            name : product.name,
+            price: product.price,
+            _id:   product._id,
+            request:{
+              type: 'GET',
+              url: 'http://localhost:3000/api/products/'+product._id
+            }
+          }
+        })
+        
+       }
+       */
+       
+      if (docs.length >= 0) {
+
         res.status(200).json({
           // message:"Products",
           // body:docs
-          products,
+          count: docs.length,
+          products: docs.map(doc =>{
+           return{
+            name:doc.name,
+            price: doc.price,
+            _id: doc._id,
+            request:{
+              type:'GET',
+              url:"http://loclahost:3000/api/products/"+doc._id
+            }
+           }
+          })
+          
         });
+        
       } else {
         res.status(404).json({
           message: "Product not found",
         });
       }
+      
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(404).json({
         error: err,
       });
@@ -92,10 +126,15 @@ router.get("/:productId", (req, res, next) => {
   Product.findById(id)
     .select("name price")
     .exec()
-    .then((product) => {
-      if (product) {
+    .then(result => {
+      if (result) {
         res.status(200).json({
-          product,
+          product:result,
+          request:{
+            type:"GET",
+            description:"GET all products",
+            url:"http://localhost:3000/api/products"
+          }
         });
       } else {
         res.status(500).json({
@@ -105,7 +144,7 @@ router.get("/:productId", (req, res, next) => {
     })
     .catch(err=>{
         res.status(500).json({
-            error:err.message
+            error:"Incorrect ID"
         })
     })
 });
@@ -128,6 +167,10 @@ router.patch("/:productId", (req, res, next) => {
       if (result) {
         res.status(201).json({
           message: "Updated successfully",
+          request:{
+            type:"GET",
+            url:"http://localhost:3000/api/products/"+id
+          }
         });
       } else {
         res.status(404).json({
@@ -152,8 +195,8 @@ router.delete("/:productId", (req, res, next) => {
   });
   */
   const id = req.params.productId;
-  res.json(id)
-/*
+
+
   if(id){
   Product.findById(id)
     .exec()
@@ -165,6 +208,11 @@ router.delete("/:productId", (req, res, next) => {
             if (result) {
               res.status(200).json({
                 message: "Product deleted successfully",
+                request:{
+                  type:"POST",
+                  url:"http:/localhost:3000/products",
+                  body:{name:'String', price:'Number'}
+                }
               });
             } else {
               res.status(404).json({
@@ -189,7 +237,7 @@ router.delete("/:productId", (req, res, next) => {
     })
 }
 
-*/
+
 });
 
 module.exports = router;

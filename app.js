@@ -24,6 +24,11 @@ mongoose.connect('mongodb://localhost:27017/eShop',)
     console.log("Connection failed")
 })
 
-app.use('/products', productRoute)
-app.use('/orders', orderRoute)
+app.use('/api/products', productRoute)
+app.use('/api/orders', orderRoute)
+app.use('*' ,(req, res)=>{
+    res.status(404).json({
+        message:"Resourse not found"
+    })
+})
 module.exports = app
