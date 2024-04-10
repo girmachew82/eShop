@@ -100,6 +100,11 @@ router.post("/", (req, res, next) => {
           createdProduct: {
             name: product.name,
             price: product.price,
+            _id: product._id,
+            request:{
+              type:"GET",
+              url:"http:/localhost:3000/api/products/"+product._id
+            }
           },
         });
       })
