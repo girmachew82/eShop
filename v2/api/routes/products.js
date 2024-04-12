@@ -1,8 +1,22 @@
 const express = require('express')
 const router = express.Router()
-
+const mongoose = require('mongoose')
+const Product = require('../models/product')
 //endpoints 
 router.get('/',(req, res, next)=>{
+    Product.find()
+    .exec()
+    .then(docs =>{
+        console.log(docs)
+        if(docs.length >= 0){
+            res.status(200).json(docs)
+        }else{
+            res.status(404).json({
+                message:"Product not found"
+            })
+        }
+    })
+    .catch()
     res.status(200).json({
         message:"Handling GET request to /products"
     })
