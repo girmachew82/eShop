@@ -2,15 +2,35 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const Product = require("../models/product");
+const multer = require('multer')
+const checkAuth = require('../middleware/check-auth')
+
+//const upload = multer({dest: 'uploads/'})
+
+const storage = multer.diskStorage({
+  destination: function(req, file, cb){
+    cb(null, './productImages/')
+  },
+  filename: function(req, file, cb){
+    cb(null, new Date().toISOString()+file.originalname)
+  }
+})
+const fileFilter  = (req, file, cb) =>{
+  if(file.mimetype ==='image/jpeg' || file.mimetype ==='image/png' || file.mimetype ==='image/jpg') 
+  cb(null, true)
+  else
+  cb(null, false)
+}
+const upload = multer({storage: storage, limits:{fieldSize: 1024 * 1024 *5}, fileFilter})
 //endpoints
-router.get("/", (req, res, next) => {
+router.get("/", checkAuth,(req, res, next) => {
   /*
     res.status(200).json({
         message:"Handling GET request to /products"
     })
     */
   Product.find()
-    .select("name price _id")
+    .select("name price _id productImage")
     .exec()
     .then(docs => {
       /*
@@ -66,7 +86,8 @@ router.get("/", (req, res, next) => {
       });
     });
 });
-router.post("/", (req, res, next) => {
+router.post("/", upload.single('productImage'),checkAuth,(req, res, next) => {
+ //console.log(req.file)
   /*
     const product= {
         name:req.body.name,
@@ -90,6 +111,7 @@ router.post("/", (req, res, next) => {
       _id: new mongoose.Types.ObjectId(),
       name: req.body.name,
       price: req.body.price,
+      productImage : req.file.path
     });
     product
       .save()
@@ -129,7 +151,7 @@ router.get("/:productId", (req, res, next) => {
   }
   */
   Product.findById(id)
-    .select("name price")
+    .select("name price _id productImage")
     .exec()
     .then(result => {
       if (result) {
