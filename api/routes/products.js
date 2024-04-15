@@ -9,7 +9,7 @@ const checkAuth = require('../middleware/check-auth')
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb){
-    cb(null, './productImages/')
+    cb(null, './productImages')
   },
   filename: function(req, file, cb){
     cb(null, new Date().toISOString()+file.originalname)
