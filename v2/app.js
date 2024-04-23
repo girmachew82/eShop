@@ -20,4 +20,9 @@ app.use((req, res, next) =>{
 
 app.use('/products', productRoute)
 app.use('/orders', orderRoute)
+app.use('*',(req, res)=>{
+    res.status(404).json({
+        message:"Resource not found"
+    })
+})
 module.exports = app

@@ -65,7 +65,7 @@ exports.products_get_all = (req, res, next) => {
       });
   }
   exports.product_create_product  = (req, res, next) => {
-    //console.log(req.file)
+    console.log(req.file)
      /*
        const product= {
            name:req.body.name,
@@ -94,7 +94,7 @@ exports.products_get_all = (req, res, next) => {
        product
          .save()
          .then((result) => {
-           console.log(result);
+           //console.log(result);
            res.status(201).json({
              message: "Product created",
              createdProduct: {

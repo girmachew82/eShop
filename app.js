@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
@@ -6,7 +7,7 @@ const mongoose = require('mongoose')
 const productRoute = require('./api/routes/products')
 const orderRoute = require('./api/routes/orders')
 const userRoute = require('./api/routes/users')
-require('dotenv').config()
+
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(bodyParser.json())
 /*
@@ -29,7 +30,7 @@ app.use((req, res, next) =>{
 */
 mongoose.connect('mongodb://localhost:27017/eShop',)
 .then(()=>{
-    console.log("Connected to the database")
+    console.log("Connected to the mongo database")
 })
 .catch(()=>{
     console.log("Connection failed")
